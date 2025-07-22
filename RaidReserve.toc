@@ -1,0 +1,10 @@
+## Interface: 50400
+## Title: RaidReserve
+## Notes: Raid item reservation management through whispers
+## Author: Christopher Santangelo
+## Version: 1.0.0
+## SavedVariables: RaidReserveDB
+
+core.lua
+ui.lua
+localization.lua

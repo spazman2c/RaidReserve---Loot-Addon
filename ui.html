@@ -1,0 +1,499 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <title>RaidReserve - MoP Classic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #18181b;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      animation: fadeinmove 0.6s cubic-bezier(.77,0,.18,1) forwards;
+    }
+    .fade-in-1  { animation-delay: 0.11s; }
+    .fade-in-2  { animation-delay: 0.18s; }
+    .fade-in-3  { animation-delay: 0.27s; }
+    .fade-in-4  { animation-delay: 0.37s; }
+    .fade-in-5  { animation-delay: 0.47s; }
+    .fade-in-6  { animation-delay: 0.57s; }
+    .fade-in-7  { animation-delay: 0.67s; }
+    @keyframes fadeinmove {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .main-frame {
+      background: #232328;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.39), 0 1.5px 0 rgba(150,150,150,0.07);
+      border: 1.5px solid #232328;
+      overflow: hidden;
+      transition: box-shadow 0.18s;
+    }
+    .main-frame:focus-within {
+      box-shadow: 0 6px 36px 0 rgba(34,241,140,0.14);
+      border-color: #2ef18c;
+    }
+    .header-bar {
+      background: #18181b;
+      border-bottom: 1.5px solid #26262d;
+      padding-top: 20px;
+      padding-bottom: 18px;
+      padding-left: 30px;
+      padding-right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table th, .table td {
+      padding: 9px 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .table th {
+      font-size: 15.7px;
+      font-weight: 600;
+      color: #e5e5e5;
+      letter-spacing: -0.01em;
+      background: #212124;
+      border-bottom: 1.5px solid #292932;
+      cursor: pointer;
+      user-select: none;
+    }
+    .table td {
+      font-size: 15px;
+      font-weight: 500;
+      color: #d3d3d4;
+      border-bottom: 1px solid #222226;
+    }
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+    .table tr:hover td {
+      background: rgba(46, 241, 140, 0.07);
+      color: #e2ffe6;
+    }
+    .notif-area {
+      min-height: 24px;
+      padding: 7px 32px 0px 32px;
+      font-size: 14.5px;
+      color: #2ef18c;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+    .divider {
+      border-bottom: 1px solid #23232a;
+      margin: 18px 0 2px 0;
+    }
+    .jade-btn, .gold-btn, .red-btn, .gray-btn {
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: box-shadow 0.13s, background 0.13s, outline 0.13s;
+      outline: none;
+      border: none;
+    }
+    .jade-btn {
+      background: linear-gradient(90deg, #2ef18c 0%, #1cae5e 100%);
+      color: #18181b;
+    }
+    .jade-btn:hover, .jade-btn:focus {
+      background: linear-gradient(90deg, #48ffb2 0%, #1cae5e 100%);
+      outline: 2px solid #2ef18c55;
+      color: #18181b;
+    }
+    .gold-btn {
+      background: linear-gradient(90deg, #f7e997 0%, #bfa34d 100%);
+      color: #232328;
+    }
+    .gold-btn:hover, .gold-btn:focus {
+      background: linear-gradient(90deg, #fff8bb 0%, #cdb460 100%);
+      outline: 2px solid #eedc82;
+    }
+    .red-btn {
+      background: linear-gradient(90deg, #f76c6c 0%, #a92727 100%);
+      color: #fff;
+    }
+    .red-btn:hover, .red-btn:focus {
+      background: linear-gradient(90deg, #ffadad 0%, #a92727 100%);
+      outline: 2px solid #f76c6c;
+    }
+    .gray-btn {
+      background: #232328;
+      color: #bdbdbd;
+      border: 1.2px solid #32323c;
+    }
+    .gray-btn:hover, .gray-btn:focus {
+      background: #26262d;
+      color: #fff;
+      outline: 2px solid #64646d;
+      border-color: #42424c;
+    }
+    .sound-toggle {
+      margin-left: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 6px;
+      transition: outline 0.13s, background 0.13s;
+    }
+    .sound-toggle svg {
+      color: #2ef18c;
+      transition: color 0.15s;
+    }
+    .sound-toggle.active svg {
+      color: #f7e997;
+      filter: drop-shadow(0 0 2px #bfa34d);
+    }
+    .sound-toggle:hover {
+      outline: 2px solid #2ef18c;
+      background: #232328;
+    }
+    .session-status {
+      font-size: 15.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      padding: 13px 30px;
+      border-top: 1.5px solid #23232a;
+      background: #19191d;
+      color: #2ef18c;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .session-status.idle {
+      color: #98989a;
+      background: #19191d;
+    }
+    .blizz-close {
+      width: 31px; height: 31px;
+      display: flex; align-items: center; justify-content: center;
+      background: none;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.12s, outline 0.13s;
+      margin-right: -9px;
+      margin-top: -7px;
+    }
+    .blizz-close svg {
+      color: #e4e4e7;
+      stroke-width: 2.1;
+      stroke: #bdbdbd;
+    }
+    .blizz-close:hover, .blizz-close:focus {
+      background: #232328;
+      outline: 2px solid #f76c6c;
+    }
+    .modal-bg {
+      background: rgba(20,20,22,0.86);
+      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 60;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(5px);
+      animation: fadeinmove 0.25s linear;
+    }
+    .modal {
+      min-width: 360px;
+      max-width: 440px;
+      padding: 32px 28px 22px 28px;
+      background: #232328;
+      border-radius: 14px;
+      border: 1.5px solid #292932;
+      box-shadow: 0 4px 40px 0 rgba(0,0,0,0.51);
+      z-index: 80;
+      animation: fadeinmove 0.3s cubic-bezier(.77,0,.18,1) forwards;
+    }
+    .modal textarea {
+      width: 100%;
+      min-height: 120px;
+      border-radius: 7px;
+      border: 1px solid #2ef18c;
+      background: #19191d;
+      color: #e4e4e7;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 14.5px;
+      padding: 8px;
+      margin-top: 12px;
+      resize: vertical;
+      outline: none;
+    }
+    .minimap-btn {
+      position: absolute;
+      left: -40px;
+      top: 38px;
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #202022 0%, #353541 80%);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 12px 0 rgba(46, 241, 140, 0.09);
+      border: 2px solid #26262d;
+      transition: box-shadow 0.17s, outline 0.14s, border 0.14s;
+      cursor: pointer;
+      z-index: 30;
+    }
+    .minimap-btn span {
+      font-size: 21.5px; font-weight: 600; letter-spacing:-0.07em; color: #2ef18c;
+    }
+    .minimap-btn:hover {
+      outline: 2px solid #2ef18c;
+      border-color: #2ef18c;
+      box-shadow: 0 3px 14px 0 rgba(46, 241, 140, 0.23);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px;
+      background: #232328;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #222226;
+      border-radius: 6px;
+    }
+    @media (max-width: 600px) {
+      .main-frame { width: 99vw !important; left: 0 !important; }
+      .header-bar, .session-status, .notif-area, .modal { padding-left: 12px; padding-right: 12px; }
+      .modal { min-width: 92vw; }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <!-- Minimap Icon -->
+  <div class="minimap-btn fade-in fade-in-1" title="Toggle RaidReserve Panel" onclick="toggleMainPanel()">
+    <span>RR</span>
+  </div>
+
+  <!-- Main Frame -->
+  <div id="mainPanel" class="main-frame fade-in fade-in-2" style="width:480px; position:relative;">
+    <!-- Title Bar -->
+    <div class="header-bar fade-in fade-in-3">
+      <span class="font-semibold text-[22px] tracking-tight text-white">RaidReserve <span class="font-medium text-[#9af9c0]">MoP Classic</span></span>
+      <button class="blizz-close" onclick="closeMainPanel()" aria-label="Close">
+        <svg width="22" height="22" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </div>
+
+    <!-- Whisper Notification Area -->
+    <div id="notifArea" class="notif-area fade-in fade-in-4"></div>
+
+    <!-- Reservation Table Header -->
+    <div class="flex items-center justify-between px-8 pt-2 fade-in fade-in-4">
+      <span class="font-semibold text-[16.5px] tracking-tight text-white">Reservations</span>
+      <button class="sound-toggle" id="soundToggleBtn" title="Toggle reservation sound" onclick="toggleSound()">
+        <svg id="soundIcon" width="19" height="19" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14m2.83-11.31a14 14 0 0 1 0 8.48" stroke-width="1.5" stroke-linecap="round"></path></svg>
+      </button>
+    </div>
+    <div class="divider"></div>
+
+    <!-- Reservation Log Table -->
+    <div class="fade-in fade-in-5 px-6 pb-2 pt-1 custom-scroll" style="max-height: 140px; overflow-y:auto;">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">Player</th>
+            <th onclick="sortTable(1)">Item</th>
+            <th onclick="sortTable(2)">Time</th>
+          </tr>
+        </thead>
+        <tbody id="reservationRows">
+        <!-- Dynamic rows go here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center justify-end gap-3 px-8 pb-4 pt-2 fade-in fade-in-6">
+      <button class="jade-btn flex items-center gap-1 px-3 py-1.5" id="startBtn" onclick="startSession()">
+        <svg width="16" height="16" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"></circle><polygon points="10,8 16,12 10,16" fill="#18181b" stroke="#18181b" stroke-width="0.8"></polygon></svg>
+        <span>Start</span>
+      </button>
+      <button class="red-btn flex items-center gap-1 px-3 py-1.5" id="stopBtn" style="display:none;" onclick="stopSession()">
+        <svg width="16" height="16" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"></circle><rect x="9" y="9" width="6" height="6" fill="#fff" stroke="#fff" stroke-width="0.8"></rect></svg>
+        <span>Stop</span>
+      </button>
+      <button class="gray-btn px-3 py-1.5" onclick="clearAll()" title="Clear all reservations">Clear</button>
+      <button class="gold-btn flex items-center gap-1 px-3 py-1.5" id="broadcastBtn" onclick="broadcastMsg()" title="Send broadcast">
+        <svg width="17" height="17" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path d="M22 2 11 13" stroke-width="1.5"></path><path d="M22 2 15 22 11 13 2 9l20-7z" stroke-width="1.5"></path></svg>
+        <span id="broadcastText">Broadcast</span>
+      </button>
+      <button class="gold-btn flex items-center gap-1 px-3 py-1.5" onclick="openExportModal()" title="Export">
+        <svg width="16" height="16" stroke="currentColor" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5"></rect><rect x="2" y="2" width="13" height="13" rx="2" stroke-width="1.5"></rect></svg>
+        <span>Export</span>
+      </button>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusBar" class="session-status idle fade-in fade-in-7">
+      <svg width="18" height="18" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"></circle><circle cx="12" cy="12" r="5" fill="#98989a" stroke="#353535" stroke-width="1.3"></circle></svg>
+      <span>Idle</span>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div id="exportModal" class="modal-bg" style="display:none;">
+    <div class="modal">
+      <div class="font-semibold text-[18px] text-white mb-2 tracking-tight">Export Reservations</div>
+      <div class="text-[14.5px] text-[#bdbdbd] mb-2">Copy and paste the list below:</div>
+      <textarea id="exportBox" readonly=""></textarea>
+      <div class="flex items-center justify-end gap-2 mt-4">
+        <button class="gray-btn px-3 py-1.5" onclick="closeExportModal()">Close</button>
+        <button class="jade-btn px-3 py-1.5" onclick="copyExportText()">Copy</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Reservation Data (simulate)
+    let reservations = [
+      {player:'Xuen',item:'[Jade Serpent Blade]',time:'21:31:02'},
+      {player:'LeiShi',item:'[Gale-Force Chestplate]',time:'21:31:09'},
+      {player:'Sha',item:'[Cloudbreaker Legguards]',time:'21:31:14'},
+      {player:'YuLon',item:'[Serpentbinder Shoulders]',time:'21:32:02'},
+      {player:'Anduin',item:'[Cloak of Wisdom]',time:'21:33:12'},
+    ];
+    let sessionActive = false, broadcastCooldown = false, soundOn = true, sortDir = [1,1,1];
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      renderTable();
+      lucide.createIcons();
+      updateStatusBar();
+    });
+
+    // Main panel toggle
+    function toggleMainPanel() {
+      let p = document.getElementById('mainPanel');
+      p.style.display = (p.style.display==='none'||!p.style.display)?'block':'none';
+    }
+    function closeMainPanel() {
+      document.getElementById('mainPanel').style.display='none';
+    }
+
+    // Reservation Table
+    function renderTable() {
+      let tbody = document.getElementById('reservationRows');
+      tbody.innerHTML = '';
+      reservations.forEach((r,idx)=>{
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${r.player}</td>
+          <td class="text-[#aaffd3] font-semibold">${r.item}</td>
+          <td class="text-[#e7cc80] font-medium">${r.time}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    // Sort Table
+    function sortTable(col) {
+      if (reservations.length < 2) return;
+      sortDir[col] *= -1;
+      reservations.sort((a,b)=>{
+        let vA = [a.player,a.item,a.time][col].toLowerCase(),
+            vB = [b.player,b.item,b.time][col].toLowerCase();
+        return vA === vB ? 0 : (vA > vB ? 1 : -1) * sortDir[col];
+      });
+      renderTable();
+    }
+    // Controls
+    function startSession() {
+      sessionActive = true;
+      updateStatusBar();
+      document.getElementById('startBtn').style.display='none';
+      document.getElementById('stopBtn').style.display='inline-flex';
+      showNotif(`Session started! Waiting for whispers...`);
+    }
+    function stopSession() {
+      sessionActive = false;
+      updateStatusBar();
+      document.getElementById('startBtn').style.display='inline-flex';
+      document.getElementById('stopBtn').style.display='none';
+      showNotif(`Session stopped.`);
+    }
+    function clearAll() {
+      reservations = [];
+      renderTable();
+      showNotif('All reservations cleared.');
+    }
+    // Broadcast
+    function broadcastMsg() {
+      if (broadcastCooldown) return;
+      showNotif('Broadcast sent to raid!');
+      document.getElementById('broadcastBtn').disabled=true;
+      document.getElementById('broadcastText').textContent = 'Cooldown...';
+      broadcastCooldown = true;
+      setTimeout(()=>{
+        document.getElementById('broadcastBtn').disabled=false;
+        document.getElementById('broadcastText').textContent = 'Broadcast';
+        broadcastCooldown = false;
+      },10000);
+    }
+    // Export Modal
+    function openExportModal() {
+      document.getElementById('exportModal').style.display='flex';
+      let lines = reservations.map(r=>`${r.player}: ${r.item} (${r.time})`);
+      document.getElementById('exportBox').value = lines.join('\n');
+    }
+    function closeExportModal() {
+      document.getElementById('exportModal').style.display='none';
+    }
+    function copyExportText() {
+      let box = document.getElementById('exportBox');
+      box.select();
+      document.execCommand('copy');
+      showNotif('Copied to clipboard!');
+      closeExportModal();
+    }
+    // Whisper Notification Area
+    function showNotif(msg) {
+      let n = document.getElementById('notifArea');
+      n.textContent = msg;
+      n.style.opacity = 1;
+      setTimeout(()=>{n.style.opacity=0.0;}, 3500);
+      if (soundOn) playSound();
+    }
+    // Sound Toggle
+    function toggleSound() {
+      soundOn = !soundOn;
+      let btn = document.getElementById('soundToggleBtn');
+      btn.classList.toggle('active', soundOn);
+    }
+    function playSound() {
+      let beep = new AudioContext();
+      let o = beep.createOscillator(), g = beep.createGain();
+      o.type='triangle'; o.frequency.value=440;
+      g.gain.value=0.08;
+      o.connect(g); g.connect(beep.destination);
+      o.start();
+      setTimeout(()=>{o.stop();beep.close();},110);
+    }
+    // Status Bar
+    function updateStatusBar() {
+      let s = document.getElementById('statusBar');
+      if (sessionActive) {
+        s.classList.remove('idle');
+        s.innerHTML = `<svg width="18" height="18" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="#2ef18c" stroke="#bfa34d" stroke-width="1.3"/></svg> <span>Session Active</span>`;
+      } else {
+        s.classList.add('idle');
+        s.innerHTML = `<svg width="18" height="18" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="#98989a" stroke="#353535" stroke-width="1.3"/></svg> <span>Idle</span>`;
+      }
+    }
+    // For demonstration, simulate a new whisper every 18s if session is active
+    setInterval(()=>{
+      if (!sessionActive) return;
+      let n = Math.floor(Math.random()*1000);
+      let newR = {player:'Player'+n, item:'[Test Item '+n+']', time:new Date().toLocaleTimeString().slice(0,8)};
+      reservations.push(newR);
+      renderTable();
+      showNotif(`Received reservation from ${newR.player}`);
+    },18000);
+  </script>
+
+</body></html>
